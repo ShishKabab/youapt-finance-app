@@ -1,0 +1,31 @@
+Ouput:
+- VAT declaration
+  - Domestic sales and expenses
+  - EU sales
+- Yearly declaration
+  - Sales - expenses
+  - Expenses per category
+- Yearly taxes to pay
+  - Dutch: (Income - Expenses - Yearly deduction - 14%) divided into layers of 36%, 40% and 51%
+
+Functions:
+- Create new customer
+- Edit customer
+  - Skip for now, do directly in DB
+- Create new invoice
+  - Option A: By hand in Sheets
+  - Option B: Let Wave generate it, then download
+  - Option C: Generate HTML, convert to PDF
+    - https://www.npmjs.com/package/html-pdf
+    - https://www.npmjs.com/package/html-pdf-chrome
+    - https://www.npmjs.com/package/chrome-headless-render-pdf
+- Sync expenses from Wave
+  - Does it need some editing?
+  - Ask confirmation
+- Generate quarterly VAT report: domestic + EU
+- Generate yearly CSVs/spreadsheets for accountant
+
+Main interface: JS shell
+- https://github.com/skerit/janeway
+- https://stackoverflow.com/questions/7096772/how-do-i-implement-tab-completion-in-node-js-shell
+- https://hackernoon.com/know-node-repl-better-dbd15bca0af6
