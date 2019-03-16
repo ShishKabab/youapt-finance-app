@@ -40,4 +40,7 @@ X Setup build
 X Schema: Customers
 X Schema: Expenses
 X Schema: Invoices
-- Import from what?
+- Import
+  - Expenses through API?
+  - Invoices and customers from CSV
+  
