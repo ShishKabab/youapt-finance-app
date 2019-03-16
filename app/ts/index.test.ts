@@ -32,24 +32,21 @@ describe('Admin interface', () => {
             },
         ])
 
-        // expect(await admin.storage.manager.collection('address').findObjects({id: customers[0]['address']})).toEqual({
-        //     streetLine1: 'Street 22',
-        //     streetLine2: null,
-        //     streetLine3: null,
-        //     city: 'Berlin',
-        //     zip: '12163',
-        //     state: null,
-        //     country: 'Germany',
-        // })
-        // expect(await admin.storage.manager.collection('address').findObjects({id: customers[1]['address']})).toEqual({
-        //     streetLine1: 'Street 23',
-        //     streetLine2: null,
-        //     streetLine3: null,
-        //     city: 'Berlin',
-        //     zip: '12163',
-        //     state: null,
-        //     country: 'Germany',
-        // })
+        expect(await admin.storage.manager.collection('address').findObjects({id: customers[0]['address']})).toEqual([{
+            id: expect.anything(),
+            streetLine1: 'Street 22',
+            city: 'Berlin',
+            zip: '12163',
+            country: 'Germany',
+        }])
+        expect(await admin.storage.manager.collection('address').findObjects({id: customers[1]['address']})).toEqual([{
+            id: expect.anything(),
+            streetLine1: 'Street 23',
+            city: 'Berlin',
+            state: 'Berlin',
+            zip: '12163',
+            country: 'Germany',
+        }])
     }
 
     it('should import wave invoices', async () => {

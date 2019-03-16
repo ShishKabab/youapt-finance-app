@@ -33,7 +33,7 @@ export class CrmStorage extends StorageModule {
                     streetLine3: {type: 'string', optional: true},
                     city: {type: 'string'},
                     zip: {type: 'string'},
-                    state: {type: 'string'},
+                    state: {type: 'string', optional: true},
                     country: {type: 'string'},
                 }
             },
