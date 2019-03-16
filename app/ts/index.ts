@@ -7,7 +7,8 @@ import { CrmStorage } from "./storage/modules/crm";
 import { InvoiceStorage } from "./storage/modules/invoices";
 import { ExpenseStorage } from "./storage/modules/expenses";
 import { registerModuleMapCollections } from "@worldbrain/storex-pattern-modules";
-import { importWaveInvoice, importWaveCustomer } from './import/wave';
+import { importWaveInvoice as importWaveInvoiceLine, importWaveCustomer } from './import/wave';
+import { ImportStorage } from './storage/modules/import';
 
 export class Admin {
     storage : Storage
@@ -21,6 +22,7 @@ export class Admin {
                 crm: new CrmStorage({storageManager}),
                 invoices: new InvoiceStorage({storageManager}),
                 expenses: new ExpenseStorage({storageManager}),
+                import: new ImportStorage({storageManager}),
             }
         }
     }
@@ -35,13 +37,13 @@ export class Admin {
     }
 
     async importWaveInvoices(options : {invoicesCsv : string, customersCsv : string}) {
-        const invoiceItems = await bluebird.promisify(csv.parse)(options.invoicesCsv, {columns : true})
+        const invoiceLineItems = await bluebird.promisify(csv.parse)(options.invoicesCsv, {columns : true})
         const customerItems = await bluebird.promisify(csv.parse)(options.customersCsv, {columns : true})
         for (const customerItem of customerItems) {
             await importWaveCustomer(customerItem, this.storage.modules)
         }
-        for (const invoiceItem of invoiceItems) {
-            await importWaveInvoice(invoiceItem, this.storage.modules)
+        for (const invoiceLineItem of invoiceLineItems) {
+            await importWaveInvoiceLine(invoiceLineItem, this.storage.modules)
         }
     }
 }

@@ -7,7 +7,9 @@ describe('Admin interface', () => {
         await admin.importWaveInvoices({
             invoicesCsv: trimIndentationSpaces(`
             customer,description,invoice_num,po_so,account,product,amount,quantity,invoice_date,currency,due_date,taxes
+            Other customer,Other work,2,,Sales,Software dev / consultancy,2000.00000,1.00000,2018-03-21,EUR,2018-03-25,Reverse
             Some customer,,1,,Consulting Income,Technical due diligence,80.00000,1.00000,2018-02-06,EUR,2018-02-20,VAT high
+            Other customer,Some travel expenses,2,,Sales,Travel Expenses,20.000,1.00000,2018-03-21,EUR,2018-03-25,Reverse
             `),
             customersCsv: trimIndentationSpaces(`
             customer_name,email,contact_first_name,contact_last_name,customer_currency,account_number,phone,fax,mobile,toll_free,website,country,province/state,address_line_1,address_line_2,city,postal_code/zip_code,shipping_address,ship-to_contact,ship-to_country,ship-to_province/state,ship-to_address_line_1,ship-to_address_line_2,ship-to_city,ship-to_postal_code/zip_code,ship-to_phone,delivery_instructions
@@ -32,21 +34,72 @@ describe('Admin interface', () => {
             },
         ])
 
-        expect(await admin.storage.manager.collection('address').findObjects({id: customers[0]['address']})).toEqual([{
-            id: expect.anything(),
-            streetLine1: 'Street 22',
-            city: 'Berlin',
-            zip: '12163',
-            country: 'Germany',
-        }])
-        expect(await admin.storage.manager.collection('address').findObjects({id: customers[1]['address']})).toEqual([{
-            id: expect.anything(),
-            streetLine1: 'Street 23',
-            city: 'Berlin',
-            state: 'Berlin',
-            zip: '12163',
-            country: 'Germany',
-        }])
+        expect(await admin.storage.manager.collection('address').findObjects({})).toEqual([
+            {
+                id: customers[0]['address'],
+                streetLine1: 'Street 22',
+                city: 'Berlin',
+                zip: '12163',
+                country: 'Germany',
+            },
+            {
+                id: customers[1]['address'],
+                streetLine1: 'Street 23',
+                city: 'Berlin',
+                state: 'Berlin',
+                zip: '12163',
+                country: 'Germany',
+            }
+        ])
+
+        const invoices = await admin.storage.manager.collection('invoice').findObjects({})
+        expect(invoices).toEqual([
+            {
+                id: expect.anything(),
+                customer: customers[1]['id'],
+                number: '2',
+                sentOn: (new Date('2018-03-21')).getTime(),
+                dueOn: (new Date('2018-03-25')).getTime(),
+            },
+            {
+                id: expect.anything(),
+                customer: customers[0]['id'],
+                number: '1',
+                sentOn: (new Date('2018-02-06')).getTime(),
+                dueOn: (new Date('2018-02-20')).getTime(),
+            },
+        ])
+
+        const invoiceLines = await admin.storage.manager.collection('invoiceLine').findObjects({})
+        expect(invoiceLines).toEqual([
+            {
+                id: expect.anything(),
+                label: "Other work",
+                category: "software:services",
+                qty: 1,
+                unitPriceCents: 200000,
+                vatType: "nl:reverse",
+                invoice: invoices[0]['id']
+            },
+            {
+                id: 2,
+                label: "",
+                category: "software:due-diligence",
+                qty: expect.anything(),
+                unitPriceCents: 8000,
+                vatType: "nl:high",
+                invoice: invoices[1]['id']
+            },
+            {
+                id: expect.anything(),
+                label: "Some travel expenses",
+                category: "expenses:travel",
+                qty: 1,
+                unitPriceCents: 2000,
+                vatType: "nl:reverse",
+                invoice: invoices[0]['id']
+            }
+        ])
     }
 
     it('should import wave invoices', async () => {

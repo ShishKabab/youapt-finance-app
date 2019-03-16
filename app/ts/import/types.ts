@@ -28,7 +28,7 @@ export interface WaveCustomerItem {
     delivery_instructions? : string
 }
 
-export interface WaveInvoiceItem {
+export interface WaveInvoiceLineItem {
     customer? : string
     description? : string
     invoice_num? : string

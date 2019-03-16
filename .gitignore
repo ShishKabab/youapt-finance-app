@@ -1,3 +1,5 @@
 private
 node_modules
 lib
+*.code-workspace
+yarn.lock

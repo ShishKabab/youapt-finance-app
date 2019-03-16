@@ -83,13 +83,16 @@ export class CrmStorage extends StorageModule {
         }
     })
 
+    async getCustomerByName(name : string) {
+        return await this.operation('findCustomerByName', { name })
+    }
+
     async insertCustomer(customer : { name : string, contactName : string, vatNumber : string, address : any }, options : { ifExists : 'update' }) {
         const existingCustomer = await this.operation('findCustomerByName', { name: customer.name });
         if (existingCustomer) {
             await this.operation('updateCustomer', { id: existingCustomer.id, ...customer})
         } else {
             await this.operation('createCustomer', customer)
-
         }
     }
 

@@ -42,5 +42,5 @@ X Schema: Expenses
 X Schema: Invoices
 - Import
   - Expenses through API?
-  - Invoices and customers from CSV
-  
+  X Invoices and customers from CSV
+
