@@ -48,15 +48,49 @@ export class CrmStorage extends StorageModule {
                 collection: 'customer',
                 args: { name: '$name:string' }
             },
+            updateCustomer: {
+                operation: 'updateObject',
+                collection: 'customer',
+                args: [
+                    {id: '$id'},
+                    {
+                        name: '$name:string',
+                        contactName: '$contactName:string',
+                        vatNumber: '$vatNumber:string',
+                    }
+                ]
+            },
             createAddress: {
                 operation: 'createObject',
                 collection: 'address'
             },
+            updateAddress: {
+                operation: 'updateObject',
+                collection: 'address',
+                args: [
+                    {id: '$id'},
+                    {
+                        streetLine1: '$streetLine1:string',
+                        streetLine2: '$streetLine2:string',
+                        streetLine3: '$streetLine3:string',
+                        city: '$city:string',
+                        zip: '$zip:string',
+                        state: '$state:string',
+                        country: '$country:string',
+                    }
+                ]
+            },
         }
     })
 
-    async insertCustomer(customer : { name : string, contactName : string, vatNumber : string, address : any }) {
-        await this.operation('createCustomer', customer)
+    async insertCustomer(customer : { name : string, contactName : string, vatNumber : string, address : any }, options : { ifExists : 'update' }) {
+        const existingCustomer = await this.operation('findCustomerByName', { name: customer.name });
+        if (existingCustomer) {
+            await this.operation('updateCustomer', { id: existingCustomer.id, ...customer})
+        } else {
+            await this.operation('createCustomer', customer)
+
+        }
     }
 
     async insertAddress(address : Address, options: { customerName : string, ifExists: 'update' }) {

@@ -55,10 +55,10 @@ describe('Admin interface', () => {
         await testImport(admin)
     })
 
-    // it('should prevent duplicates while importing wave invoices', async () => {
-    //     const admin = new Admin({ dbPath: 'sqlite://' })
-    //     await admin.setup()
-    //     await testImport(admin)
-    //     await testImport(admin)
-    // })
+    it('should prevent duplicates while importing wave invoices', async () => {
+        const admin = new Admin({ dbPath: 'sqlite://' })
+        await admin.setup()
+        await testImport(admin)
+        await testImport(admin)
+    })
 })
